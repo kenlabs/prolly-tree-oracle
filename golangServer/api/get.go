@@ -4,7 +4,6 @@ import (
 	"Oracle.com/golangServer/Oracle"
 	"Oracle.com/golangServer/config"
 	"context"
-	"encoding/json"
 	"fmt"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"log"
@@ -24,7 +23,7 @@ func GetEventListener() {
 	for {
 		select {
 		case err := <-eventSub.Err():
-			log.Println("[Error in Event CREAT]:", err)
+			log.Println("[Error in Event GET]:", err)
 		case event := <-Logs:
 			log.Println("Received get event ", event.ReqID)
 			get(event)
@@ -64,7 +63,7 @@ func get(event *Oracle.OracleGet) {
 		config.OracleContract.GetRsp(tps, event.ReqID, statement, []byte{}, event.CallBack, event.Sender, "Data is not exist")
 		return
 	}
-	result, err := json.Marshal([][]byte{nodeTobyte(node)})
+	result := nodeTobyte(node)
 	if err != nil {
 		log.Println("Marshal Results ERROR: ", err)
 		info := fmt.Sprintf("Marshal Results ERROR: %v", err)
